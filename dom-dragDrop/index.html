@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div id="box">
+		<h2><a>点击区域<a></h2>
+	    <p><strong>Drag:</strong><span></span></p>
+	    <p><strong>offsetTop:</strong><span></span></p>
+	    <p><strong>offsetLeft:</strong><span></span></p>
+	</div>
+	<script type="text/javascript" src="js/script.js"></script>
+	<script>
+	var Box = document.getElementById('box'),
+		Bh2 = box.getElementsByTagName('h2')[0],
+		Span = box.getElementsByTagName('span');
+	//  点击 位置 距离 box  左上角的距离 
+	var diffW,diffH;
+	var bodyW = document.documentElement.clientWidth,
+		bodyH = document.documentElement.clientHeight,
+		boxW = box.clientWidth,
+		boxH = box.clientHeight;
+		
+	var isDrag = false;
+
+	Bh2.onmousedown = function(event){	
+		console.log("mousedown");	
+		isDrag = true;
+		Span[0].innerHTML = isDrag;
+		diffW = event.clientX - Box.offsetLeft;
+		diffH = event.clientY - Box.offsetTop;
+	};
+
+	document.onmousemove = function(){
+		if (isDrag) {
+			console.log("mousemove");
+			var offW = event.clientX - diffW,
+				offH = event.clientY - diffH;
+
+			// 限定区域
+			offW = offW < 0 ? 0 : offW;
+			offH = offH < 0 ? 0 : offH;
+			offW = (offW + boxW) > bodyW-10 ? (bodyW-boxW -10) : offW;
+			offH = (offH + boxH) > bodyH-10 ? (bodyH-boxH -10) : offH;
+
+			Box.style.left = offW + 'px';
+			Box.style.top = offH + 'px';
+			Span[1].innerHTML = offW;
+			Span[2].innerHTML = offH;	
+		}
+	};
+
+	Bh2.onmouseup = function(){
+		isDrag = false;
+		Span[0].innerHTML = isDrag;
+		console.log("mouseup");
+	};
+	</script>
+</body>
+</html>
