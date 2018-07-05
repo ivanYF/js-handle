@@ -1,9 +1,9 @@
 /**
- * 快速排序 1
+ * 快速排序 
  * 阮一峰老师版本
  */
 
-const Arr = [85, 24, 63, 45, 17, 31, 96, 50]; // 定义无序数组
+const Arr = [1, 25, 2, 7, 32, 14, 35, 28]; // 定义无序数组
 
 function quickSort(arr) {
 	console.log(11111);
@@ -37,3 +37,11 @@ function quickSort(arr) {
 	// 递归
 	return quickSort(left).concat([pivot], quickSort(right));
 }
+
+
+
+/**
+ * 二分查找
+ * 在一堆有序的数中找出指定的数
+ * 目前数与 数组中间值 对比，大在后半段找，小在前半段，依次类推
+ */
