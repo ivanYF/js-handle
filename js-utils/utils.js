@@ -48,17 +48,27 @@ function quickSort(arr) {
  */
 
 function FindArry(target, array) {
-	let i = parseInt(array.length/2);
-	while ( i >= 1) {
+	let idx = -1;
+	let i = Math.ceil(array.length/2); // 向上取舍
+
+	while ( i >= 1 && i <= (array.length + 1)) {
 		if (array[i-1] > target) {
-			i = parseInt((i-1)/2);
+			if (i == 1) {
+				return idx;
+			};
+			i = Math.ceil(i/2);
 		}else if(array[i-1] < target){
-			i = parseInt(((i-1) + array.length)/2);
+			if (i == array.length) {
+				return idx;
+			};
+			i = Math.ceil((i + array.length)/2);
 		}else{
-			return true;
+			idx = i-1;
+			console.log('索引值为：' + idx);
+			return idx;
 		}
 	}
-	return false;	
+	return idx;	
 }
 
 
