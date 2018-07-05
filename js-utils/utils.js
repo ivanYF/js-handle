@@ -41,7 +41,42 @@ function quickSort(arr) {
 
 
 /**
- * 二分查找
+ * 二分查找 搜索对象为而为数组
  * 在一堆有序的数中找出指定的数
  * 目前数与 数组中间值 对比，大在后半段找，小在前半段，依次类推
+ * target 目标数值  搜索对象 array
  */
+
+function FindArry(target, array) {
+	let i = parseInt(array.length/2);
+	while ( i >= 1) {
+		if (array[i-1] > target) {
+			i = parseInt((i-1)/2);
+		}else if(array[i-1] < target){
+			i = parseInt(((i-1) + array.length)/2);
+		}else{
+			return true;
+		}
+	}
+	return false;	
+}
+
+
+// 二维数组查找
+function Find(target, array) {
+	let i = 0;
+	let j = array[i].length - 1;
+	// 二维数组长度 j >= 0 
+	while (i < array.length && j >= 0) {
+		if (array[i][j] < target) {
+		    i++;
+		} else if (array[i][j] > target) {
+		    j--;
+		} else {
+		    return true;
+		}
+	}
+	return false;
+}
+
+
