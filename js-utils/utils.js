@@ -1,12 +1,11 @@
+let Ivan = window.Ivan = window.Ivan ? window.Ivan : {};
+
 /**
  * 快速排序 
  * 阮一峰老师版本
  */
 
-const Arr = [1, 25, 2, 7, 32, 14, 35, 28]; // 定义无序数组
-
-function quickSort(arr) {
-	console.log(11111);
+Ivan.quickSort = function(arr) {
 	// 数组 长度 小于等于 1 直接输出
 	if (arr.length <= 1) {
 	    return arr;
@@ -34,10 +33,13 @@ function quickSort(arr) {
 	 * left* *.length <= 1  直接结束 for 执行次数 
 	 */
 
-	// 递归
-	return quickSort(left).concat([pivot], quickSort(right));
+	// 递归  Ivan.quickSort == 》arguments.callee 调用自身
+	return arguments.callee(left).concat([pivot], arguments.callee(right));
 }
 
+// example
+// 定义无序数组
+const Arr = [1, 25, 2, 7, 32, 14, 35, 28]; 
 
 
 /**
@@ -47,7 +49,7 @@ function quickSort(arr) {
  * target 目标数值  搜索对象 array
  */
 
-function FindArry(target, array) {
+Ivan.FindArry = function(target, array) {
 	let idx = -1;
 	let i = Math.ceil(array.length/2); // 向上取舍
 
@@ -73,7 +75,7 @@ function FindArry(target, array) {
 
 
 // 二维数组查找
-function Find(target, array) {
+Ivan.Find = function(target, array) {
 	let i = 0;
 	let j = array[i].length - 1;
 	// 二维数组长度 j >= 0 
@@ -139,9 +141,11 @@ function parseParam(url,args) {
 }
 
 /**
- * 
+ * parseLocator url 链接
+ * 参数：lower key 小写 
+ * upper：key 大写
+ * group：相同的key转化为数组
  */
-
 
 function parseLocator(url, args) {
     url = url === null || url === undefined ? "" : String(url);
