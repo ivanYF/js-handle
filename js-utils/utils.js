@@ -246,9 +246,70 @@ function exchange(num) {
 }
 
 // example 只适应正整数
-console.log(exchange(1234567));
+console.log(thousands(1234567));
+
+/**
+ * [exchangejs js 计算千分位]
+ * @param  {[type]} num [需要改变的数值]
+ * @return {[type]}     [返回]
+ */
+function exchangejs(num){  
+  	num = num + ''; //数字转字符串  
+  	let str = ''; //字符串累加  
+  	for(var i = num.length-1,j = 1; i>=0; i--,j++){  
+      	//每隔三位加逗号，过滤正好在第一个数字的情况  
+      	// j 计算次数 每三次 追加一个，
+      	if( j%3 ==0 && i!=0){
+          	str += num[i] + ',';//加千分位逗号  
+          	continue;  
+      	}  
+      	str += num[i];//倒着累加数字
+  	} 
+   	// 得到的数组是反转的 切割 然后reverse 再拼接
+  	return str.split('').reverse().join("");//字符串=>数组=>反转=>字符串  
+}
+
+/**
+ * [exchangeLocal 利用 toLocaleString]
+ * @param  {[type]} num [传入数值]
+ * @return {[type]}     [description]
+ */
+// 只适应正整数
+function exchangeLocal(num){	
+	return num.toLocaleString()
+}
+// example
+// let num = 2434232;
+// num.toLocaleString('zh', { style: 'currency', currency: 'CNY' });    //￥2,434,232.00
 
 
+// 修改增加 负数 and 小数位
+// 增加符号  /\d{1,3}(?=(\d{3})+$)/g --> /\-?\d{1,3}(?=(\d{3})+$)/g   \-? 0-1次
+// 增加小数 提前匹配出小数
+// 记录小数 然后切割 整数，再拼接返回
+
+function thousands(num) {
+    num += ''; //转成字符串
+    let zNum = num; // 整数位置
+    let xNUM = ''; //小数位置
+    if (num.indexOf('.') >= 0) {
+    	zNum = num.split('.')[0];
+    	xNUM = num.split('.')[1];
+    };
+
+    if (zNum.length <= 3) {
+        return num;
+    }
+
+    // 前面 0-3个数 后面至少有1组（+） 3个数字结尾
+    // $ 匹配字符结尾
+    zNum = zNum.replace(/\-?\d{1,3}(?=(\d{3})+$)/g, (v) => {
+        console.log(v)
+        return v + ',';
+    });
+    if (xNUM) {zNum = zNum + '.' + xNUM};
+    return zNum;
+}
 
 
 
