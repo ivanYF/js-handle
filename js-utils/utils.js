@@ -158,21 +158,28 @@ function parseLocator(url, args) {
     	// for 循环获取
     	for (var i = 0, len = list.length; i < len; i++) {
 
+    		// a=1 ['a','1']
         	str = list[i].split("=");
+        	// ['a','1','']
         	str.push("");
 
         	var key = str[0];
         	if (args && args.indexOf("lower") > -1)
+        		// key转化为小写
           		key = String(str[0]).toLowerCase();
         	else if (args && args.indexOf("upper") > -1)
+        		// key转化为大写
           		key = String(str[0]).toUpperCase();
 
         	if (args && args.indexOf("group") > -1) {
+        		// 有group的时候才会把相同的key 的value收录为数组
+        		// 不然直接覆盖
           		if (query[key]) query[key].push(str[1]);
           		else query[key] = [str[1]];
         	} else query[key] = str[1];
       	}
 
+      	// value 如果为数组 而且只有一项 直接转化为 value 改写为数组第一项的值
       	for (var i in query) {
         	if (query[i] && query[i].length === 1) {
           		query[i] = query[i][0];
