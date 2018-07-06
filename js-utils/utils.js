@@ -176,14 +176,14 @@ function parseLocator(url, args) {
           		key = String(str[0]).toUpperCase();
 
         	if (args && args.indexOf("group") > -1) {
-        		// 有group的时候才会把相同的key 的value收录为数组
+        		// 有group的时候 value转化为数组
         		// 不然直接覆盖
           		if (query[key]) query[key].push(str[1]);
           		else query[key] = [str[1]];
         	} else query[key] = str[1];
       	}
 
-      	// value 如果为数组 而且只有一项 直接转化为 value 改写为数组第一项的值
+      	// args 为group时 value为数组 如果value只有一项 直接转化为数组第一项的值
       	for (var i in query) {
         	if (query[i] && query[i].length === 1) {
           		query[i] = query[i][0];
@@ -192,6 +192,59 @@ function parseLocator(url, args) {
     }
 	return query;
 };
+
+/**
+ * [实现一个简单的模版引擎]
+ * @param  {[type]} template [模版字符串]
+ * @param  {[type]} data     [模版替换参数对象]
+ * @return {[type]}          [string]
+ */
+
+// 遍历 数组key 然后利用正则替换
+// `${}` es6 拼接字符串语法   new RegExp(`{{${key}}`,"g") ==> reg = /{{name}}/g
+var render = (template,data)=>{
+	var result='';
+   	for( key in data){
+ 		if(!key){
+ 			result  = (result || template).replace(new RegExp(`{{${key}}`,"g"),undefined);
+ 		}else{		
+ 			result  = (result || template).replace(new RegExp(`{{${key}}}`,"g"),data[key]);
+ 		}
+ 	}
+ 	return result
+}
+
+// example
+let template = 'HI,我是{{name}}，{{age}}岁，性别{{sex}}';
+let data = {
+	name: 'Ivan',
+	age: 28
+}
+// render(template,data)
+// "HI,我是Ivan，28岁，性别{{sex}}"
+
+
+/**
+ * [exchange 将数字变为千分位分割]
+ * @param  {[type]} num [description]
+ * @return {[type]}     [description]
+ */
+// ?= 正向预查，在任何开始匹配圆括号内的正则表达式模式的位置来匹配搜索字符串
+function exchange(num) {
+    num += ''; //转成字符串
+    if (num.length <= 3) {
+        return num;
+    }
+
+    num = num.replace(/\d{1,3}(?=(\d{3})+$)/g, (v) => {
+        console.log(v)
+        return v + ',';
+    });
+    return num;
+}
+
+// example
+console.log(exchange(1234567));
 
 
 
