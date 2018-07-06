@@ -89,4 +89,99 @@ function Find(target, array) {
 	return false;
 }
 
+/**
+ * 解析url后的参数
+ * 获取链接上面的参数
+ * 首先切割？ 参数的拼接为 & 拼接 再切歌& 然后 通过键值对的方式
+ */
+function parseParam(url,args) {
+	// 声明 空对象
+	let obj = {};
+	let arr = url.split("?");
+	if(arr.length == 1){ //判断没有问号
+		return "无参数"
+	}
+	let total = arr[1].split("&");
+	// 切割 键值对 a=1&b=2 ==> ['a=1','b=2']
+	for(let i = 0; i < total.length; i++){
+	 	let single = total[i].split("=");
+	 	if(single[0] == ''){ //判断有？但是没有参数
+	   		return '无参数'
+		}
+
+		// 判断 value 不存在
+	 	if(!single[1]){
+	   		obj[single[0]] = false;
+	 	}else{
+	 		// key 已经存在 则把相同key 的参数转化为数组
+		   	if(obj[single[0]]){
+		    	let concat;
+		    	if (!Array.isArray(obj[single[0]])) { 
+		    		//判断value是否为数组
+		       		concat = [obj[single[0]]]
+		     	}else{
+		     		// 非数组 转化为数组
+		       		concat = obj[single[0]];
+		     	}
+		     	// 增加新的数值
+		     	concat.push(single[1]);
+		     	//数组去重
+		     	concat = new Set(concat);
+		     	// 语法糖 把 Set，Map，转化为数组
+		     	concat = Array.from(concat) 
+		     	obj[single[0]] = concat
+		   	}else{
+		    	obj[single[0]] = decodeURI(single[1]) //进行转码
+		   	}
+	 	}
+	}
+	return obj
+}
+
+/**
+ * 
+ */
+
+
+function parseLocator(url, args) {
+    url = url === null || url === undefined ? "" : String(url);
+    	
+    // 初始化转化参数
+    var query = {}, // 输出对象
+    	list, // 键值对数组
+    	str;  // 单个 key value 数组
+
+    // 按照字符?截取
+    if (url.indexOf("?") !== -1) {
+    	// 键值对 数组
+    	list = url.split("?")[1].split("&");
+    	// for 循环获取
+    	for (var i = 0, len = list.length; i < len; i++) {
+
+        	str = list[i].split("=");
+        	str.push("");
+
+        	var key = str[0];
+        	if (args && args.indexOf("lower") > -1)
+          		key = String(str[0]).toLowerCase();
+        	else if (args && args.indexOf("upper") > -1)
+          		key = String(str[0]).toUpperCase();
+
+        	if (args && args.indexOf("group") > -1) {
+          		if (query[key]) query[key].push(str[1]);
+          		else query[key] = [str[1]];
+        	} else query[key] = str[1];
+      	}
+
+      	for (var i in query) {
+        	if (query[i] && query[i].length === 1) {
+          		query[i] = query[i][0];
+        	}
+      	}
+    }
+	return query;
+};
+
+
+
 
