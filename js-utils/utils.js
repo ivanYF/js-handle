@@ -236,6 +236,8 @@ function exchange(num) {
         return num;
     }
 
+    // 前面 0-3个数 后面至少有1组（+） 3个数字结尾
+    // $ 匹配字符结尾
     num = num.replace(/\d{1,3}(?=(\d{3})+$)/g, (v) => {
         console.log(v)
         return v + ',';
@@ -243,8 +245,10 @@ function exchange(num) {
     return num;
 }
 
-// example
+// example 只适应正整数
 console.log(exchange(1234567));
+
+
 
 
 
