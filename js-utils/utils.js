@@ -313,6 +313,16 @@ function thousands(num) {
 
 
 // 深拷贝
+function deepClone(o1, o2) {
+    for (let k in o2) {
+        if (typeof o2[k] === 'object') {
+            o1[k] = {};
+            deepClone(o1[k], o2[k]);
+        } else {
+            o1[k] = o2[k];
+        }
+    }
+}
 
 
 
