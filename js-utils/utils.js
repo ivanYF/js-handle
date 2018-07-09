@@ -313,16 +313,42 @@ function thousands(num) {
 
 
 // 深拷贝
-function deepClone(o1, o2) {
+// 针对 对象键值对的拷贝
+// 对 数组的数字数据，会有出入
+/**
+ * [deepCopy 深拷贝 -- 针对 对象键值对的拷贝]
+ * @param  {[type]} o1 [输出字段]
+ * @param  {[type]} o2 [拷贝参考对象]
+ * @return {[type]}    [description]
+ */
+function deepCopy(o1, o2) {
     for (let k in o2) {
         if (typeof o2[k] === 'object') {
             o1[k] = {};
-            deepClone(o1[k], o2[k]);
+            deepCopy(o1[k], o2[k]);
         } else {
             o1[k] = o2[k];
         }
     }
 }
+
+var obj = {
+	a:1,
+	b:2,
+	c:[1,2,3]
+}
+var newObj = {};
+deepCopy(newObj,obj)
+
+// 返回
+// 应该注意到问题的错误点
+/**
+newObj = {
+	a:1,
+	b:2,
+	c:{0:1,1:2,2:3}
+}
+**/
 
 
 
