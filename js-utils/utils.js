@@ -91,6 +91,38 @@ Ivan.Find = function(target, array) {
 	return false;
 }
 
+
+// 伪继承
+// xhr 请求是的 对象拼接
+function extend(src) {
+	// 定义返回 对象  存储 args
+    var obj, args = arguments;
+    // 遍历args 数组
+    for (var i = 1; i < args.length; ++i) {
+    	// 赋值操作
+        if ((obj = args[i])) {
+        	console.log(obj);
+        	// 遍历 obj 其实也就是 args[i]
+            for (var key in obj) {
+            	// 合并数值操作
+                src[key] = obj[key];
+            }
+        }
+    }
+    return src;
+};
+
+// example
+
+/**
+var a = {a: {ddd:111}};
+var b = {b: 456};
+var c = extend({}, a, b);
+c  {a:{ddd:111},b:456}
+*/
+
+
+
 /**
  * 解析url后的参数
  * 获取链接上面的参数
@@ -140,6 +172,60 @@ function parseParam(url,args) {
 	return obj
 }
 
+
+/**
+ * [addParam 拼接url数据]
+ * @param {[type]} url    [链接url]
+ * @param {[type]} params [传入的对象数据]
+ */
+function addParam(url, params) {
+
+	var list = window.extend({}, params);
+    for (var i in list) {
+        try {
+            decodeURIComponent(list[i]);
+            list[i] = decodeURIComponent(list[i]);
+        } catch (e) {}
+        list[i] = encodeURIComponent(list[i]);
+    }
+
+    // 获取 search 字符串
+    // 获取 hash 字符串
+    var SEARCH_REG = /\?([^#]*)/,
+        HASH_REG = /#(.*)/;
+    url = url || '';
+    var search = {},
+        searchMatch = url.match(SEARCH_REG),
+        searchAttr = [],
+        searchStr = '';
+    // 获取 链接原有参数对象
+    if (searchMatch) search = window.parseLocator(searchMatch[0]);
+
+    // 伪继承合并参数对象
+    search = window.extend(search, list);
+
+    // 把 undefined 过滤 然后转化为数组
+    for (var i in search) {
+        if (search[i] === undefined) search[i] = '';
+        searchAttr.push(i + '=' + search[i]);
+    }
+    // 数组拼接
+    if (searchAttr[0]) searchStr = '?' + searchAttr.join('&');
+
+    //是否存在search 存在直接替换掉 search
+    if (SEARCH_REG.test(url)) {
+    	url = url.replace(SEARCH_REG, searchStr);
+    }else {
+        if (HASH_REG.test(url)) {
+        	//是否存在hash 利用 search+hash 替换hash
+            url = url.replace(HASH_REG, searchStr + '#' + url.match(HASH_REG)[1]);
+        } else {
+        	// 直接拼接
+            url += searchStr;
+        }
+    }
+    return url;
+};
 
 
 
@@ -419,30 +505,5 @@ function deepClone(data){
 
 
 
-// 伪继承
-// xhr 请求是的 对象拼接
-function extend(src) {
-	// 定义返回 对象  存储 args
-    var obj, args = arguments;
-    // 遍历args 数组
-    for (var i = 1; i < args.length; ++i) {
-    	// 赋值操作
-        if ((obj = args[i])) {
-        	console.log(obj);
-        	// 遍历 obj 其实也就是 args[i]
-            for (var key in obj) {
-            	// 合并数值操作
-                src[key] = obj[key];
-            }
-        }
-    }
-    return src;
-};
-
-
-// 
-var a = {a: {ddd:111}};
-var b = {b: 456};
-var c = extend({}, a, b);
 
 
