@@ -350,6 +350,30 @@ newObj = {
 }
 **/
 
+// 伪继承
+// xhr 请求是的 对象拼接
+function extend(src) {
+	// 定义返回 对象  存储 args
+    var obj, args = arguments;
+    // 遍历args 数组
+    for (var i = 1; i < args.length; ++i) {
+    	// 赋值操作
+        if ((obj = args[i])) {
+        	console.log(obj);
+        	// 遍历 obj 其实也就是 args[i]
+            for (var key in obj) {
+            	// 合并数值操作
+                src[key] = obj[key];
+            }
+        }
+    }
+    return src;
+};
 
+
+// 
+var a = {a: {ddd:111}};
+var b = {b: 456};
+var c = extend({}, a, b);
 
 
