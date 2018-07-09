@@ -140,6 +140,9 @@ function parseParam(url,args) {
 	return obj
 }
 
+
+
+
 /**
  * parseLocator url 链接
  * 参数：lower key 小写 
@@ -350,10 +353,14 @@ newObj = {
 }
 **/
 
-
+/**
+ * [getType 判断函数类型]
+ * @param  {[type]} obj [判断参数]
+ */
 function getType(obj){
 	//tostring会返回对应不同的标签的构造函数
 	var toString = Object.prototype.toString;
+	// 枚举数值
 	var map = {
 		'[object Boolean]'  : 'boolean', 
 		'[object Number]'   : 'number', 
@@ -379,10 +386,15 @@ function getType(obj){
 // 例子
 // var type = Object.prototype.toString.call(111).slice(8,-1).toLowerCase()
 
-
+/**
+ * [deepClone 数组深拷贝]
+ * @param  {[type]} data [description]
+ * @return {[type]}      [description]
+ */
 function deepClone(data){
    	var type = getType(data);
    	var obj;
+   	// 初始化 obj 类型
    	if(type === 'array'){
        	obj = [];
    	} else if(type === 'object'){
@@ -391,6 +403,7 @@ function deepClone(data){
        	//不再具有下一层次
        	return data;
    	}
+   	// 数组 与 对象 进行不同的操作
    	if(type === 'array'){
        	for(var i = 0, len = data.length; i < len; i++){
         	obj.push(deepClone(data[i]));
@@ -402,6 +415,7 @@ function deepClone(data){
    	}
    	return obj;
 }
+
 
 
 
