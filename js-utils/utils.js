@@ -350,6 +350,61 @@ newObj = {
 }
 **/
 
+
+function getType(obj){
+	//tostring会返回对应不同的标签的构造函数
+	var toString = Object.prototype.toString;
+	var map = {
+		'[object Boolean]'  : 'boolean', 
+		'[object Number]'   : 'number', 
+		'[object String]'   : 'string', 
+		'[object Function]' : 'function', 
+		'[object Array]'    : 'array', 
+		'[object Date]'     : 'date', 
+		'[object RegExp]'   : 'regExp', 
+		'[object Undefined]': 'undefined',
+		'[object Null]'     : 'null', 
+		'[object Object]'   : 'object'
+	};
+	if(obj instanceof Element) {
+		return 'element';
+	}
+	// 匹配key 返回数组类型
+	return map[toString.call(obj)];
+
+	// 剪短写法为
+	// return Object.prototype.toString.call(obj).slice(8,-1).toLowerCase()
+}
+
+// 例子
+// var type = Object.prototype.toString.call(111).slice(8,-1).toLowerCase()
+
+
+function deepClone(data){
+   	var type = getType(data);
+   	var obj;
+   	if(type === 'array'){
+       	obj = [];
+   	} else if(type === 'object'){
+       	obj = {};
+   	} else {
+       	//不再具有下一层次
+       	return data;
+   	}
+   	if(type === 'array'){
+       	for(var i = 0, len = data.length; i < len; i++){
+        	obj.push(deepClone(data[i]));
+       	}
+   	} else if(type === 'object'){
+       	for(var key in data){
+        	obj[key] = deepClone(data[key]);
+       	}
+   	}
+   	return obj;
+}
+
+
+
 // 伪继承
 // xhr 请求是的 对象拼接
 function extend(src) {
