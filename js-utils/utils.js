@@ -345,10 +345,10 @@ console.log(thousands(1234567));
 function exchangejs(num){  
   	num = num + ''; //数字转字符串  
   	let str = ''; //字符串累加  
-  	for(var i = num.length-1,j = 1; i>=0; i--,j++){  
+  	for(var i = num.length - 1,j = 1; i >= 0; i--,j++){  
       	//每隔三位加逗号，过滤正好在第一个数字的情况  
       	// j 计算次数 每三次 追加一个，
-      	if( j%3 ==0 && i!=0){
+      	if(j%3 == 0 && i!=0){
           	str += num[i] + ',';//加千分位逗号  
           	continue;  
       	}  
