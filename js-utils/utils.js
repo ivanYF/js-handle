@@ -466,11 +466,19 @@ function getType(obj){
 	return map[toString.call(obj)];
 
 	// 剪短写法为
-	// return Object.prototype.toString.call(obj).slice(8,-1).toLowerCase()
+	
 }
 
-// 例子
-// var type = Object.prototype.toString.call(111).slice(8,-1).toLowerCase()
+/**
+ * [getTypeSimple 判断数据类型]
+ * @param  {[type]} obj [需要判断的数据类型]
+ * @return {[type]}     [返回的对象 类型]
+ * @example Object.prototype.toString.call(111).slice(8,-1).toLowerCase() ==> number
+ */
+function getTypeSimple(obj){
+    return Object.prototype.toString.call(obj).slice(8,-1).toLowerCase()
+}
+
 
 /**
  * [deepClone 数组深拷贝]
@@ -512,7 +520,7 @@ function deepClone(data){
  * @param  {[type]} date [输入日期对象，默认当前时间]
  * @param  {[type]} fmt  [输出格式]
  * @return {[type]}      [根据规则 输出的时间顺序]
- * example formatDate(new Date(2006,0,1), 'yyyy-MM-dd HH:mm');
+ * @example formatDate(new Date(2006,0,1), 'yyyy-MM-dd HH:mm');
  */
 function formatDate(date, fmt) {
     if (!date) date = new Date();
