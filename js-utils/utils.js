@@ -503,6 +503,101 @@ function deepClone(data){
 }
 
 
+/**
+ * 时间处理 格式化
+ */
+
+/**
+ * [formatDate 将Date类型解析为String类型]
+ * @param  {[type]} date [输入日期对象，默认当前时间]
+ * @param  {[type]} fmt  [输出格式]
+ * @return {[type]}      [根据规则 输出的时间顺序]
+ * example formatDate(new Date(2006,0,1), 'yyyy-MM-dd HH:mm');
+ */
+function formatDate(date, fmt) {
+    if (!date) date = new Date();
+    fmt = fmt || 'yyyy-MM-dd HH:mm:ss';
+    var o = {
+        'M+': date.getMonth() + 1, //月份      
+        'd+': date.getDate(), //日      
+        'h+': date.getHours() % 12 === 0 ? 12 : date.getHours() % 12, //小时      
+        'H+': date.getHours(), //小时      
+        'm+': date.getMinutes(), //分      
+        's+': date.getSeconds(), //秒      
+        'q+': Math.floor((date.getMonth() + 3) / 3), //季度      
+        'S': date.getMilliseconds() //毫秒      
+    };
+    if (/(y+)/.test(fmt)) {
+        // 检测 y+ 匹配 按照 y.length 输出 date.getFullYear() = 2018 
+        // substr(4 - RegExp.$1.length) 为截取的起始下标，length 默认为 字符串结尾
+        fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
+    }
+    for (var k in o) {
+        // 遍历获取 对象key ==》 正则语句
+        if (o.hasOwnProperty(k) && new RegExp('(' + k + ')').test(fmt)) {
+            // 匹配规则是否存在
+            // 检查显示位数，当匹配规则的长度为1 利用截取字符串切割数据
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)));
+        }
+    }
+    return fmt;
+};
+
+
+/**
+ * [formatDate 将String类型解析为Date类型]  
+ * @param {String} fmt 输入的字符串格式的日期
+ * @example parseDate('2006-1-1') return new Date(2006,0,1)  
+ * @example parseDate(' 2006-1-1 ') return new Date(2006,0,1)  
+ * @example parseDate('2006-1-1 15:14:16') return new Date(2006,0,1,15,14,16)  
+ * @example parseDate(' 2006-1-1 15:14:16 ') return new Date(2006,0,1,15,14,16);  
+ * @example parseDate('不正确的格式') retrun null  
+ * /^ *(reg) *$/兼容匹配字符串左右出现空格
+ */
+ function parseDate(str) {
+    str = String(str).replace(/^[\s\xa0]+|[\s\xa0]+$/ig, '');
+    var results = null;
+
+    //秒数 #9744242680  
+    results = str.match(/^ *(\d{10}) *$/);
+    if (results && results.length > 0)
+        return new Date(parseInt(str, 10) * 1000);
+
+    //毫秒数 #9744242682765 
+    results = str.match(/^ *(\d{13}) *$/);
+    if (results && results.length > 0)
+        return new Date(parseInt(str, 10));
+
+    //20110608 
+    results = str.match(/^ *(\d{4})(\d{2})(\d{2}) *$/);
+    if (results && results.length > 3)
+        return new Date(parseInt(results[1], 10), parseInt(results[2], 10) - 1, parseInt(results[3], 10));
+
+    //20110608 1010 
+    results = str.match(/^ *(\d{4})(\d{2})(\d{2}) +(\d{2})(\d{2}) *$/);
+    if (results && results.length > 5)
+        return new Date(parseInt(results[1], 10), parseInt(results[2], 10) - 1, parseInt(results[3], 10), parseInt(results[4], 10), parseInt(results[5], 10));
+
+    //2011-06-08 
+    results = str.match(/^ *(\d{4})[\._\-\/\\](\d{1,2})[\._\-\/\\](\d{1,2}) *$/);
+    if (results && results.length > 3)
+        return new Date(parseInt(results[1], 10), parseInt(results[2], 10) - 1, parseInt(results[3], 10));
+
+    //2011-06-08 10:10 
+    results = str.match(/^ *(\d{4})[\._\-\/\\](\d{1,2})[\._\-\/\\](\d{1,2}) +(\d{1,2}):(\d{1,2}) *$/);
+    if (results && results.length > 5)
+        return new Date(parseInt(results[1], 10), parseInt(results[2], 10) - 1, parseInt(results[3], 10), parseInt(results[4], 10), parseInt(results[5], 10));
+
+    //2011/06\\08 10:10:10 
+    results = str.match(/^ *(\d{4})[\._\-\/\\](\d{1,2})[\._\-\/\\](\d{1,2}) +(\d{1,2}):(\d{1,2}):(\d{1,2}) *$/);
+    if (results && results.length > 6)
+        return new Date(parseInt(results[1], 10), parseInt(results[2], 10) - 1, parseInt(results[3], 10), parseInt(results[4], 10), parseInt(results[5], 10), parseInt(results[6], 10));
+
+    return (new Date(str));
+};
+
+
+
 
 
 
