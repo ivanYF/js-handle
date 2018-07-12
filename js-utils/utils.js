@@ -605,6 +605,95 @@ function formatDate(date, fmt) {
 };
 
 
+/**
+ * @method xhr
+ * @description 
+ * @public
+ * @param {Object} obj 请求参数
+ * @example 
+ * hui.xhr({
+ *     url: '...', 
+ *     [type: 'GET'], 
+ *     [contentType: 'application/json'], 
+ *     [responseType: 'json'],
+ *     success: function (resDataJSON) {}
+ * });
+ */
+
+/**
+ * [xhr ajax 请求]
+ * @param  {[type]} opt [obj 请求参数]
+ * xhr({
+ *    url: '...', 
+ *    [type: 'GET'], 
+ *    [contentType: 'application/json'], 
+ *    [responseType: 'json'],
+ *    success: function (res) {}
+ * });
+ */
+function xhr(opt) {
+    opt = opt ? opt : {};
+    // 创建实例
+    var xhr = new XMLHttpRequest();
+    // 声明实例数据
+    xhr.open(opt.type || 'GET', opt.url, true);
+    // 默认 返回json
+    xhr.setRequestHeader('Content-Type', opt.contentType || 'application/json');
+    // 监测 xhr 状态变更
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            if (opt.success && typeof opt.success == 'function') {
+                opt.success(!opt.responseType || opt.responseType == 'json' ?
+                    Function('return ' + xhr.responseText)() : xhr.responseText);
+            }
+        } else if (xhr.readyState == 4 && xhr.status != 200) {
+            if (opt.error) opt.error(xhr.status);
+        }
+    };
+    // 发送ajax
+    xhr.send(opt.body || JSON.stringify(opt.data) || '');
+    return xhr;
+};
+
+
+/**
+ * @method jsonp
+ * @description 发起jsonp请求
+ * @public
+ * @param {Object} obj 请求参数
+ * @example 
+ * hui.xhr({
+ *     url: '...', 
+ *     callback: 'jsonp1'
+ * });
+ */
+let jsonp = (function(i) {
+    return function(opt) {
+        var el = document.createElement('script');
+
+        // 获取 callback 字符串 
+        // 如果没有直接自动在window上挂载一个callback function
+        var callback = '';
+        if (typeof opt.callback == 'string') callback = opt.callback;
+        else {
+            while (window['jsonp' + (++i)]) {}
+            callback = 'jsonp' + i;
+
+            if (typeof opt.callback == 'function') {
+                window[callback] = function(res) {
+                    opt.callback(res);
+                    if (opt.success) opt.success(res);
+                };
+            } else {
+                window[callback] = function(res) {
+                    if (opt.success) opt.success(res);
+                };
+            }
+        }
+        el.src = opt.url + (!opt.nocallback && (opt.url.indexOf('?') > -1 ? '&' : '?') + 'callback=' + callback);
+        document.documentElement.appendChild(el);
+    };
+})(0);
 
 
 
