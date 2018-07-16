@@ -4,15 +4,13 @@
 +(function(root) {
     'use strict';
 
-    var lazyLoad = {
-        version: '1.2.0'
-    };
+    var lazyLoad = {};
 
     var callback = function() {};
 
     var offset, poll, throttle, unload,
         queues = [], //加载队列
-        loading = 0,
+        loading = 0, //当前加载数
         maxParallel = 5; //最大并行数
 
     /**
@@ -20,23 +18,21 @@
      */
     var loadNextImg = function() {
         //判断是否可以加载下一张图片
+        // 小于并行数
         if (loading <= maxParallel) {
+            // 拿出第一个元素
             var waitObj = queues.shift();
-            //判断是否在可视窗口中，否则优先加载可视图片
-            //if(inView(waitObj.elem)){
+            // 判断是否在可视窗口中，否则优先加载可视图片
             if (waitObj) {
+                // 加载拿出来的元素
                 loading++;
                 waitObj.elem.src = waitObj.src;
                 loadNextImg();
             }
-
-            //}else{
-            //  loadNextImg();
-            //}
         }
     }
 
-    //使用requestAnimationFrame 替代 settimeout 来处理
+    //使用 requestAnimationFrame 替代 settimeout 来处理
     var raf = root.requestAnimationFrame || function(fn) {
         clearTimeout(poll);
         poll = setTimeout(fn, throttle);
