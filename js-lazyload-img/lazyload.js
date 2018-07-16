@@ -47,7 +47,7 @@
     var inView = function(element) {
         var view = {
             l: (root.pageXOffset || document.documentElement.scrollLeft) - offset.l,
-            t: -offset.t,
+            t: -w.t,
             b: window.innerHeight + offset.b,
             r: (root.innerWidth || document.documentElement.clientWidth) + offset.r
         }
