@@ -51,6 +51,7 @@
             b: window.innerHeight + offset.b,
             r: (root.innerWidth || document.documentElement.clientWidth) + offset.r
         }
+        // 获取元素边界位置
         var box = element.getBoundingClientRect();
         return ((box.top >= view.t && box.top < view.b || box.bottom >= view.t && box.bottom < view.b || box.bottom > view.b && box.top < view.t) && (box.left >= view.l && box.left < view.r || box.right < view.l && box.right <= view.r || view.l >= box.left && view.r <= box.right))
     };
@@ -92,6 +93,7 @@
         unload = !!opts.unload;
         callback = opts.callback || callback;
         lazyLoad.render();
+        // 监听 出发事件
         if (document.addEventListener) {
             root.addEventListener('scroll', debounce, false);
             root.addEventListener('touchstart', debounce, false);
