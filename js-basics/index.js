@@ -128,13 +128,165 @@ Math.max.apply(null,arr1)
 Object.prototype.toString.call({})
 
 
+// 判断字符类型
+
+typeof ''
+
+'' instanceof String
+
+Object.prototype.toString.call('').slice(7,-1).toLocaleLowerCase()
+
+
+
+/**
+ *
+ *
+ * @param {*} context
+ * @param {*} parameter
+ * @returns
+ */
+Function.prototype.newCall = function(context,...parameter){
+  if(typeof context === 'object' || typeof context === 'function'){
+    context = context || window
+  }else{
+    context = Object.create(null)
+  }
+  let fn = Symbol()
+  context[fn] = this
+  const res = context[fn](...parameter)
+  delete context.fn
+  return res
+}
+
+let person = {
+  name: 'Abiel'
+}
+
+function sayHi(age,sex){
+  console.log(this.name)
+}
+
+
+
+sayHi.newCall(person, 25, '男')
+
+
+
+/**
+ *
+ *
+ * @param {*} context
+ * @param {*} parameter
+ * @returns
+ */
+Function.prototype.newApply = function(context,parameter){
+  if(typeof context === 'object' || typeof context === 'function'){
+    context = context || window
+  }else{
+    context = Object.create(null)
+  }
+
+  let fn = Symbol()
+  context[fn] = this
+  const res = context[fn](...parameter)
+  delete context[fn]
+  return res
+}
+
+
+let person = {
+  name: 'Abiel'
+}
+
+function sayHi(age,sex){
+  console.log(this.name,age,sex)
+}
+
+sayHi.newApply(person,[25,'nan'])
+
+
+
+/**
+ *
+ *
+ * @param {*} context
+ * @param {*} innerAgs
+ * @returns
+ */
+Function.prototype.bind = function(context,...innerAgs){
+  var me = this
+  return function(...finallyArgs){
+    return me.call(context,...innerAgs,...finallyArgs)
+  }
+}
+
+let person = {
+  name: 'Abiel'
+}
+
+function sayHi(age,sex){
+  console.log(this.name,age,sex)
+}
+
+
+let personSayHi = sayHi.bind(person,25)
+
+personSayHi('nan')
 
 
 
 
+// 节流 防抖
+
+let throttle = function(func,delay){
+  let timer = null
+  return function(){
+    if(!timer){
+      timer = setTimeout(() => {
+        func.apply(this,arguments);
+        timer = null
+      },delay)
+    }
+  }
+}
+
+let timeout = null
+let debounce = function(fn,wait){
+  if(timeout !== null) clearTimeout(timeout)
+  timeout = setTimeout( ()=> {
+    fn.apply(this,arguments)
+    timeout = null
+  },wait)
+}
+
+const handle = function() {
+  console.log(arguments)
+  console.log(Math.random());
+}
+
+document.documentElement.addEventListener("scroll", debounce(handle, 3000));
 
 
+Promise.all = (arr) => {
+  let arrResult = []
 
+  return new _Promise((resove,reject) => {
+    let i = 0
+    next()
+    function next(){
+      arr[i].then(function(res){
+        arrResult.push(res)
+        i++
+        if(i == arr.length){
+          resove()
+        }else{
+          next()
+        }
+      })
+    }
+  })
+
+}
 
 
 
